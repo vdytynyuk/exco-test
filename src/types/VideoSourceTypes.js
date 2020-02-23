@@ -1,19 +1,19 @@
 import React from 'react';
-import { ReactComponent as PlaybuzzLogo } from '../assets/svg/playbuzz-icon.svg'
-import { ReactComponent as FacebookLogo } from '../assets/svg/facebook-icon.svg'
-import { ReactComponent as YoutubeLogo } from '../assets/svg/youtube-icon.svg'
-import { ReactComponent as UrlLogo } from '../assets/svg/url-icon.svg'
+import playbuzzLogo from '../assets/svg/playbuzz-icon.svg'
+import facebookLogo from '../assets/svg/facebook-icon.svg'
+import youtubeLogo from '../assets/svg/youtube-icon.svg'
+import urlLogo from '../assets/svg/url-icon.svg'
 
 export const VideoSourceTypes = [
     {
-        name: "playbuzz",
-        id: "videoId",
+        name: "ex.co",
+        id: "itemId",
         getPlayer: (id) => {
             const video = <div className="playbuzz" data-id={id} data-show-share="false" data-show-info="false" data-comments="false"></div>;
             return video;
         },
         getIcon: () => {
-            return <PlaybuzzLogo />;
+            return <img src={playbuzzLogo} />;
         }
     },
     {
@@ -32,7 +32,7 @@ export const VideoSourceTypes = [
             );
         },
         getIcon: () => {
-            return <UrlLogo />;
+            return <img src={urlLogo} />;
         }
     },
     {
@@ -52,7 +52,7 @@ export const VideoSourceTypes = [
             );
         },
         getIcon: () => {
-            return <FacebookLogo />;
+            return <img src={facebookLogo} />;
         }
     },
     {
@@ -71,7 +71,7 @@ export const VideoSourceTypes = [
             );
         },
         getIcon: () => {
-            return <YoutubeLogo />;
+            return <img src={youtubeLogo} />;
         }
     }
 ];
