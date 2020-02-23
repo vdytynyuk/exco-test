@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-
-import './ItemsList.css'
-
 import DisplayItem from '../../components/DisplayItem/DisplayItem';
-import { VideoSourceTypes } from '../../types/VideoSourceTypes'
+import { VideoSourceTypes } from '../../types/VideoSourceTypes';
+import './ItemsList.css';
 
 class itemsList extends Component {
     supportedItems = items => {
@@ -11,7 +9,7 @@ class itemsList extends Component {
             return !!(VideoSourceTypes.find(source => source.name === item.source));
         });
         return approved;
-    } ;
+    };
 
     render() {
         const items = this.supportedItems(this.props.items).map((item, index) => {

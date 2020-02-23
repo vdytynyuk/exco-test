@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-import './DisplayItem.css'
+import './DisplayItem.css';
 
-import { VideoSourceTypes } from '../../types/VideoSourceTypes'
+import { VideoSourceTypes } from '../../types/VideoSourceTypes';
+import { ContentTypes } from '../../types/ContentTypes';
 
 class displayItem extends Component {
 
@@ -11,8 +13,8 @@ class displayItem extends Component {
         return this.props.itemData.source && source.name === this.props.itemData.source;
     });
 
-    isValidItem = ({type, source, views, length, date}) => {
-        return type && source && views && length && date;
+    isValidItem = ({type, source, views}) => {
+        return type && source && views;
     };
 
     dateStrOption = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -32,28 +34,56 @@ class displayItem extends Component {
         return `${minutes}:${seconds}m`;
     };
 
+    componentDidMount() {
+        if (window['Playbuzz']) window['Playbuzz'].render();
+    }
 
     render() {
         if(this.isValidItem(this.props.itemData)) {
-            const dateStr = new Date(this.props.itemData.date).toLocaleDateString("en-US", this.dateStrOption);
+            const dateStr = new Date().toLocaleDateString("en-US", this.dateStrOption);
             const readableViewsNumber = this.numberToReadableText(this.props.itemData.views);
-            const videoDuration = this.secondsToTimeText(this.props.itemData.length);
-            return (
-                <div className="display-item">
-                    {this.videoSourceConfig.getPlayer(this.props.itemData[this.videoSourceConfig.id])}
-                    <div className="display-item__details">
-                        <h2>{this.props.itemData.title}</h2>
-                        <div className="display-item__info">
-                            <p>{`${dateStr} - ${readableViewsNumber}`}</p>
+            const itemId = this.props.itemData[this.videoSourceConfig.id];
+            switch (this.props.itemData.type) {
+                case ContentTypes.VIDEO:
+                    return (
+                        <Link to={`/items/${itemId}`} className="display-item">
+                                {this.videoSourceConfig.getPlayer(itemId)}
+                                <div className="display-item__details">
+                                    <h2>{this.props.itemData.title || '[no-title]'}</h2>
+                                    <div className="display-item__info">
+                                        <p>{`${dateStr} - ${readableViewsNumber}`}</p>
+                                    </div>
+                                    <div className="display-item__bottom-bar">
+                                        <div>{this.videoSourceConfig.getIcon()}</div>
+                                    </div>
+                                </div>
+                        </Link>
+                    );
+                case ContentTypes.QUIZ:
+                case ContentTypes.TRIVIA:
+                case ContentTypes.POLL:
+                    return (
+                        <Link to={`/items/${itemId}`} className="display-item">
+                            <img src={this.props.itemData.thumbnail}></img>
+                            <div className="display-item__details">
+                                <h2>{this.props.itemData.title || '[no-title]'}</h2>
+                                <div className="display-item__info">
+                                    <p>{`${dateStr} - ${readableViewsNumber}`}</p>
+                                </div>
+                                <div className="display-item__bottom-bar">
+                                    <div>{this.videoSourceConfig.getIcon()}</div>
+                                </div>
+                            </div>
+                        </Link>
+                    );
+                default:
+                    return (
+                        <div className="display-item error-item">
+                            <div>ITEM NOT AVAILABLE</div>
                         </div>
-                        <div className="display-item__bottom-bar">
-                            <div>{this.videoSourceConfig.getIcon()}</div>
-                            <div className="display-item__bottom-bar__duration">{videoDuration}</div>
-                        </div>
-                    </div>
-                </div>
+                    );
 
-            );
+            };
         }
         return (
             <div className="display-item error-item">
